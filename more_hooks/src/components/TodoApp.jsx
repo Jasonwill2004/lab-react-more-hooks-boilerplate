@@ -1,57 +1,80 @@
-import React, { useReducer } from "react";
-
+import React, { useRef, useReducer } from "react";
 import TodoItem from "./TodoItem";
 
-const todoReducer = (state,action) => {
-    console.log('action: ', action);
+const initalState = [
+  {
+    data: "First Item",
+    isHidden: "false",
+  },
+];
 
-    if(action.type == "Add"){
-        return [
-            ...state,{
-                data:action.payload ,
-                isHidden : false
-            }
-        ]
-    }
+const todoReducer = (state, action) => {
+  if (action.type == "ADD_ITEM") {
+    return [
+      ...state,
+      {
+        data: action.payload,
+        isHidden: false,
+      },
+    ];
+  }
+  if (action.type == "CHANGE_ISHIDDEN") {
+    return state.map((e, i) => {
+      return i == action.payload ? { ...e, isHidden: !e.isHidden } : e;
+    });
+  }
+  return state;
+};
 
-    if (action.type == "CHANGFE_ISHIDDEN"){
-        return (
-            state.map((e,i)=>{
-                return i == action.payload ? {...e,isHidden : !e.isHidden}:e
-            })
-        )
-    }
+const TodoApp = () => {
+  const [todo, dispatch] = useReducer(todoReducer, initalState);
+  console.log(todo);
 
-    return state
-}
+  const input = useRef(null);
 
-const initialState = [
-    {
-        data:"first data" ,
-        isHidden:false 
-    }
-]
+  return (
+    <div>
+      <input
+        style={{
+          width: "30vw",
+          height: "4vh",
+          margin: "20px 0",
+          padding: "0 10px",
+          background: "none",
+          borderRadius: "20px",
+          border: "5px solid black",
+          color:"black"
+        }}
+        placeholder="Enter a item"
+        ref={input}
+        type="text"
+        onKeyDown={(e) => {
+          if (e.key == "Enter") {
+            dispatch({ type: "ADD_ITEM", payload: e.target.value });
+          }
+        }}
+      />
 
-const TodoApp = () =>{
-    const [todo,dispatch] = useReducer(todoReducer,initialState)
-    console.log('todo: ', todo);
+      {/* loop through todo state using map */}
+      {todo.map((e, i) => {
+        return <TodoItem item={e} index={i} dispatch={dispatch} />;
+      })}
 
-    return (
-        <div>
-            <input type="text" onKeyDown={(e)=>{
-                if(e.key == "Enter" && e.target.value!=""){
-                    dispatch({type:"Add",payload:e.target.value})
-                }
-            }} />
-        {todo.map((e,i)=>{
-            return <TodoItem key={i} item={e} index={i} dispatch={dispatch} />
-        })}
-        </div>
+      <button
+        style={{
+          backgroundColor: "grey",
+          opacity: "0.9",
+          color: "black",
+          margin: "30px 0",
+        }}
+        onClick={() => {
+          input.current.focus();
+        }}
+      >
+        Go Back to Top
+      </button>
+    </div>
+  );
+};
 
-
-    )
-
-
-}
-
-export default TodoApp
+export default TodoApp;

@@ -1,20 +1,27 @@
 import React from "react";
 
-const TodoItem =({item:{data,isHidden},index,dispatch})=>{
-    return(<div style={
-        {background:"darkred",
-        width:"80vw",
-        marginTop:"20px",
-        fontSize:"25px",
-        paddingBottom:"10px",
-        color:"white",
-        borderRadius:"10px"}
-    }>
-        <h3 style={{filter:`${isHidden ? "blur(5px)" : "blur(0px)"}`}} >{isHidden ? "This Content is Hidden" : data}</h3>
-        <button onClick={()=>{
-            dispatch({type:"CHANGFE_ISHIDDEN",payload:index})
-        }}>Toggle</button>
-    </div>)
-}
+const TodoItem = ({ item: { data, isHidden }, index, dispatch }) => {
+  return (
+    <div
+      style={{
+        backgroundColor: "grey",
+        width: "70vw",
+        height: "100px",
+        color: "black",
+        borderRadius: "20px",
+        filter: `${isHidden ? "blur(2px)" : "blur(0px)"}`,
+      }}
+    >
+      <h3>{isHidden ? "This content is hidden" : data}</h3>
+      <button
+        onClick={() => {
+          dispatch({ type: "CHANGE_ISHIDDEN", payload: index });
+        }}
+      >
+        Toggle
+      </button>
+    </div>
+  );
+};
 
-export default TodoItem
+export default TodoItem;
